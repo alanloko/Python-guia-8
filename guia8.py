@@ -1,4 +1,7 @@
+from queue import LifoQueue as Pila
+from queue import Queue as Cola
 
+import random
 
 #archivo = open("archivo.txt","r")
 nuevoarchivo = open("nuevoarchivo.txt",'w')
@@ -101,29 +104,101 @@ def agregar_frase_al_principio(archivo : str, frase : str):
 # archivo = open("archivo.txt","w")
 # archivo.write(frasenueva)
 
-# archivobytes = open("archivo.txt","b+r")
-# bites = archivobytes.read()
-# print(bites)
+# archivobytes = open("archivo.txt","rb")
+# bites = archivobytes.readline()
+# print(chr(bites[0]))
 
-estudiantes = open("estudiantes.csv","r")
-contenido : str = estudiantes.readline()
-i : int= 0
-categoria : str= ""
-categorias : list[str]= []
+# estudiantes = open("estudiantes.csv","r")
+# contenido : str = estudiantes.readline()
+# i : int= 0
+# categoria : str= ""
+# categorias : list[str]= []
 
-def promedioDeEstudiantes(archivo : str):
-    contendio = archivo.read()
-    categorias = ['Id', 'Materia', 'Fecha','Notas']
-    alumnno : list = []
-    categoria : str= ""
-    longitud = contarlineas(archivo)
-    archivo = open("estudiantes.csv",'r')
-    for i in range(longitud): 
-        while(contenido[i] != "\n"):
-            if(contendio[i] != ","):
-                categoria += contenido[i]
-            else: 
-                alumnno.append(categoria)
-                categoria = ""
-        alumnno.append(categoria)
+# def promedioDeEstudiantes(archivo : str):
+#     contendio = archivo.read()
+#     categorias = ['Id', 'Materia', 'Fecha','Notas']
+#     alumnno : list = []
+#     categoria : str= ""
+#     longitud = contarlineas(archivo)
+#     archivo = open("estudiantes.csv",'r')
+#     for i in range(longitud): 
+#         while(contenido[i] != "\n"):
+#             if(contendio[i] != ","):
+#                 categoria += contenido[i]
+#             else: 
+#                 alumnno.append(categoria)
+#                 categoria = ""
+#         alumnno.append(categoria)
         
+def generar_num_al_azar(cantidad : int, desde : int, hasta : int) -> Pila[int]:
+    p = Pila()
+    for i in range(cantidad):
+        p.put(random.randint(desde,hasta))
+    return p
+
+# p = generar_num_al_azar(5,1,10)
+
+# while(not(p.empty())):
+#      print(p.get())
+
+def cantidad_elementos(p : Pila) -> int:
+    elementos : list = []
+    cont : int = 0
+    while(not(p.empty())):
+        elementos.append(p.get())
+        cont += 1
+    for i in range(len(elementos) - 1,-1,-1):
+        p.put(elementos[i])
+    return cont
+
+# print(cantidad_elementos(p))
+# while(not(p.empty())):
+#      print(p.get())
+
+
+def buscar_el_maximo(p : Pila) -> int:
+    elementos : list[int] = []
+    while(not(p.empty())):
+        elementos.append(p.get())
+    for i in range(len(elementos) - 1,-1,-1):
+        p.put(elementos[i])
+    maximo : int = elementos[0]
+    for elem in elementos:
+        if(elem > maximo):
+            maximo = elem
+    return maximo
+# p : Pila[int] = Pila()
+# p.put(1)
+# p.put(6)
+# p.put(7)
+# p.put(4)
+# print(buscar_el_maximo(p))
+
+def esta_bien_balanceada(s : str) -> bool:
+    p : Pila[str] = Pila()
+    for i in s:
+        if(i == '('):
+            p.put(i)
+        elif(i == ')'):
+            p.put(i)
+    while(not(p.empty())):
+        
+# def cierraparentesis(p : Pila) -> bool:
+#     closed = False
+#     parentesis = p.get()
+#     if(parentesis == '('):
+#         return False
+#     else:
+#         cierraparentesis(p)
+
+def generar_num_al_azar(cantidad : int, desde : int, hasta : int) -> Cola[int]:
+    c : Cola[int] = Cola()
+    for i in range(cantidad):
+        c.put(random.randint(desde,hasta))
+    return c
+
+
+# c = generar_num_al_azar(5,1,10)
+
+# while(not(c.empty())):
+#      print(c.get())
