@@ -1,7 +1,8 @@
 from queue import LifoQueue as Pila
 from queue import Queue as Cola
-
 import random
+
+## Archivos:
 
 #archivo = open("archivo.txt","r")
 nuevoarchivo = open("nuevoarchivo.txt",'w')
@@ -129,7 +130,10 @@ def agregar_frase_al_principio(archivo : str, frase : str):
 #                 alumnno.append(categoria)
 #                 categoria = ""
 #         alumnno.append(categoria)
-        
+
+
+### Pilas:
+
 def generar_num_al_azar(cantidad : int, desde : int, hasta : int) -> Pila[int]:
     p = Pila()
     for i in range(cantidad):
@@ -181,15 +185,52 @@ def esta_bien_balanceada(s : str) -> bool:
             p.put(i)
         elif(i == ')'):
             p.put(i)
-    while(not(p.empty())):
+    if(cantidad_elementos(p) % 2 != 0):
+        return False
+    else:    
+        return cierraparentesis(p.get(),p,False)
         
-# def cierraparentesis(p : Pila) -> bool:
-#     closed = False
-#     parentesis = p.get()
-#     if(parentesis == '('):
-#         return False
-#     else:
-#         cierraparentesis(p)
+def cierraparentesis(parentesis : str,p : Pila[str],closed : bool) -> bool:
+    if(parentesis == '(' and p.empty()):
+        closed = True
+    elif(not(p.empty())):
+        return cierraparentesis(p.get(),p,closed)
+    return closed
+
+print(esta_bien_balanceada("((1 + (2 x 3 = (20 / 5))"))
+
+def evaluar_expresion(s : str) -> float:
+    pila : Pila[str]= Pila()
+    cont : int = 0
+    for i in range(len(s) - 1,-1,-1):
+        if(s[i] == "+" or s[i] == "-" or s[i] == "*" or s[i] == "/"):
+            cont += 1
+        if(s[i] != " ") :
+            pila.put(s[i])
+        
+
+    while(cont != 0):
+        n1 : int = float(pila.get())
+        n2 : int = float(pila.get())
+        op : str = pila.get()
+        pila.put(operador(op,n1,n2))
+        cont -= 1
+    return pila.get()
+
+
+def operador(s : str, n1 : int, n2 : int) -> float:
+    if(s == "+"):
+        return n1 + n2
+    elif(s == "-"):
+        return n1 - n2
+    elif(s == "*"):
+        return n1 * n2
+    else:
+        return n2 / n1
+    
+#print(evaluar_expresion("3 4 + 5 * 2 -"))
+
+### Colas: 
 
 def generar_num_al_azar(cantidad : int, desde : int, hasta : int) -> Cola[int]:
     c : Cola[int] = Cola()
@@ -202,3 +243,159 @@ def generar_num_al_azar(cantidad : int, desde : int, hasta : int) -> Cola[int]:
 
 # while(not(c.empty())):
 #      print(c.get())
+
+
+def cantidadElementos(c : Cola) -> int:
+    elementos : list = []
+    cont : int = 0
+    while(not(c.empty())):
+        elementos.append(c.get())
+        cont += 1
+    for i in elementos:
+        c.put(i)
+    return cont
+
+# c : Cola[int] = Cola()
+# c.put(1)
+# c.put(2)
+# c.put(3)
+# c.put(4)
+# print(list(c.queue))
+# print(cantidadElementos(c))
+# print(list(c.queue))
+def maximoColas(c : Cola) -> int:
+    elementos : list = []
+    while(not(c.empty())):
+        elementos.append(c.get())
+    for i in elementos:
+        c.put(i)
+    max : int = elementos[0]
+    for elem in elementos:
+        if(elem > max):
+            max = elem
+    return max
+# c : Cola[int] = Cola()
+# c.put(1)
+# c.put(7)
+# c.put(3)
+# c.put(4)
+# print(list(c.queue))
+# print(maximoColas(c))
+# print(list(c.queue))
+
+def secuencia_bingo(n : int) -> Cola[int]:
+    bingo : Cola[int] = Cola()
+    numeros : list[int] = []
+    for i in range(n):
+        numeros.append(i)
+    while(len(numeros) > 0):
+        if(len(numeros) == 1):
+            pos = 0
+        else:
+            pos = random.randint(0,len(numeros))
+            if(pos == len(numeros)):
+                pos = pos - 1 
+        bingo.put(numeros[pos])
+        numeros.pop(pos)
+    return bingo
+# bingo = secuencia_bingo(100)
+# print(list(bingo.queue))
+
+def jugar_carton_bingo(carton : list[int], bolillero : Cola[int]) -> int:
+    cont : int = 0
+    while(not(bolillero.empty())):
+        numero : int = bolillero.get()
+        if(pertenece(numero,carton)):
+            carton.pop(posicion(numero,carton))
+        cont += 1
+        if(len(carton) == 0):
+            break
+    return cont
+        
+def pertenece(numero : int, carton : list[int]) -> int:
+    for i in carton:
+        if(i == numero):
+            return True
+    return False
+
+def posicion(numero : int, carton : list[int]) -> int:
+    for i in range(len(carton)):
+        if(carton[i] == numero):
+            return i
+        
+#  
+def n_pacientes_urgentes(c : Cola[(int,str,str)]) -> int:
+    elementos : list[(int,str,str)] = []
+    cont : int = 0
+    while(not(c.empty())):
+        elementos.append(c.get())
+    for i in elementos:
+        c.put(i)
+    for i in elementos:
+        if(i[0] <= 3 and i[0] >= 1):
+            cont += 1
+    return cont
+
+# c = Cola()
+# c.put((10,"c","h"))
+# c.put((1,"a","b"))
+# c.put((3,"s","t"))
+# c.put((1,"g","y"))
+# c.put((7,"c","h"))
+# c.put((2,"c","h"))
+# c.put((6,"c","h"))
+
+# print(n_pacientes_urgentes(c))
+
+def atencion_clientes(c : Cola[(str,int,bool,bool)]) -> Cola[(str,int,bool,bool)]:
+    elementos : list[(int,str,str)] = []
+    clientes : Cola[(str,int,bool,bool)] = Cola()
+    prioridad1 : Cola[(str,int,bool,bool)] = Cola()
+    prioridad2 : Cola[(str,int,bool,bool)] = Cola()
+    sinprioridad : Cola[(str,int,bool,bool)] = Cola()
+    prioridades : Cola[(str,int,bool,bool)] = Cola()
+    while(not(c.empty())):
+        elementos.append(c.get())
+    for i in elementos:
+        c.put(i)
+        clientes.put(i)
+    while(not(clientes.empty())):
+        cliente : (str,int,bool,bool) = clientes.get() # type: ignore
+        if(cliente[3] == 1):
+            prioridad1.put(cliente)
+        elif(cliente[2] == 1):
+            prioridad2.put(cliente)
+        else:
+            sinprioridad.put(cliente)
+    while(not(prioridad1.empty())):
+        cliente = prioridad1.get()
+        prioridades.put(cliente)
+    
+    while(not(prioridad2.empty())):
+        cliente = prioridad2.get()
+        prioridades.put(cliente)
+    while(not(sinprioridad.empty())):
+        cliente = sinprioridad.get()
+        prioridades.put(cliente)
+    return prioridades
+
+
+# clientes : Cola[(str,int,bool,bool)] = Cola()
+# clientes.put(("a",1,1,1))
+# clientes.put(('u', 111, 0, 1))
+# clientes.put(("b",2,0,1))
+# clientes.put(("c",3,1,0))
+# clientes.put(("z",4,0,0))
+# clientes.put(("d",5,0,1))
+# clientes.put(("e",6,1,0))
+# clientes.put(('t', 40, 0, 0))
+# clientes.put(('h', 41, 1, 0))
+# clientes.put(('i', 47, 0, 1))
+
+# print(list(atencion_clientes(clientes).queue))
+
+### Diccionarios: 
+
+def agrupar_por_longitud(archivo : str) -> dict:
+    contenido = archivo.readline()
+    
