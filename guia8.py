@@ -508,4 +508,4 @@ print(inventario)
 actualizar_stock(inventario, "Camisa", 10)
 print(inventario)
 valor_total = calcular_valor_inventario(inventario)
-print("Valor total del inventario:", valor_total) # Deberia imprimir 1300.00
+print("Valor total del inventario:", valor_total) # Deberia imprimir 1100.00
