@@ -197,7 +197,7 @@ def cierraparentesis(parentesis : str,p : Pila[str],closed : bool) -> bool:
         return cierraparentesis(p.get(),p,closed)
     return closed
 
-print(esta_bien_balanceada("((1 + (2 x 3 = (20 / 5))"))
+#print(esta_bien_balanceada("((1 + (2 x 3 = (20 / 5))"))
 
 def evaluar_expresion(s : str) -> float:
     pila : Pila[str]= Pila()
@@ -397,5 +397,115 @@ def atencion_clientes(c : Cola[(str,int,bool,bool)]) -> Cola[(str,int,bool,bool)
 ### Diccionarios: 
 
 def agrupar_por_longitud(archivo : str) -> dict:
-    contenido = archivo.readline()
-    
+    archivo = open("archivo.txt", "r")
+    palabras : dict = {}
+    contenido = archivo.read()
+    largo = 0
+    for i in contenido:
+        if(i == " " or i == '\n'):
+            if(largo in palabras.keys()):
+                palabras[largo] += 1
+            else:
+                palabras[largo] = 1
+            largo = 0
+        else:
+            largo += 1
+    palabras.pop(0)
+    archivo.close()
+
+    return palabras
+
+# print(agrupar_por_longitud("archivo.txt"))
+
+def contador_palabras(archivo : str) -> dict:
+    archivo = open("archivo.txt", "r")
+    palabras : dict = {}
+    contenido = archivo.read()
+    palabra : str = ""
+    for i in contenido:
+        if(i == " " or i == '\n'):
+            if(palabra in palabras.keys()):
+                palabras[palabra] += 1
+            else:
+                palabras[palabra] = 1
+            palabra = ""
+        else:
+            palabra += i
+    if(len(palabra) > 0):
+        if(palabra in palabras.keys()):
+                palabras[palabra] += 1
+        else:
+            palabras[palabra] = 1
+    palabras.pop("")
+    archivo.close()
+    return palabras
+
+
+def palabra_con_mas_apariciones(archivo : str):
+    palabras : dict = contador_palabras(archivo)
+    llaves = list(palabras.keys())
+    maximo = palabras[llaves[0]]
+    palabra = llaves[0]
+    for i in llaves:
+        if(maximo < palabras[i]):
+            maximo = palabras[i]
+            palabra = i
+    return palabra
+
+# print(palabra_con_mas_apariciones("archivo.txt"))
+
+historiales : dict[str,Pila[str]] = {}
+
+def visitar_sitio(historiales : dict[str,Pila[str]], usuario : str, sitio : str) ->  None:
+    pila : Pila[str] = Pila()
+    if(usuario in historiales.keys()):
+        historiales[usuario].put(sitio)
+    else:
+        pila.put(sitio)
+        historiales[usuario] = pila
+    return None
+
+def navegar_atras(historiales : dict[str,Pila[str]], usuario : str) -> None:
+    historiales[usuario].get()
+
+visitar_sitio(historiales,"Usuario1","youtube.com")
+visitar_sitio(historiales,"Usuario1","google.com")
+visitar_sitio(historiales,"Usuario1","instagram.com")
+print(list(historiales["Usuario1"].queue))
+navegar_atras(historiales,"Usuario1")
+print(list(historiales["Usuario1"].queue))
+
+
+
+def agregar_producto(inventario : dict[str,dict[float,int]], nombre : str, precio : float, cantidad : int) -> None:
+    precioycantidad : dict[float,int] = {precio : cantidad}
+    inventario[nombre] = precioycantidad
+    return None
+
+def actualizar_stock(inventario : dict[str,dict[float,int]], nombre : str, cantidad : int) -> None:
+    for i in inventario[nombre].keys():
+        inventario[nombre][i] = cantidad
+
+def actualizar_precio(inventario : dict[str,dict[float,int]], nombre : str, precio : float) -> None:
+    for i in inventario[nombre].keys():
+        cantidad = inventario[nombre][i] 
+        inventario[nombre][i].pop()
+    inventario[nombre][precio] = cantidad
+
+def calcular_valor_inventario(inventario) -> float:
+    productos : list[str]= list(inventario.keys())
+    sumatotal : int = 0
+    for i in productos:
+        precio : list[float] = list(inventario[i].keys())
+        cantidad : list[int] = inventario[i][precio[0]]
+        sumatotal += precio[0]*cantidad
+    return sumatotal
+
+inventario : dict[str,dict[float,int]] = {}
+agregar_producto(inventario, "Camisa", 20.0, 50) 
+agregar_producto(inventario, "Pantalon", 30.0, 30) 
+print(inventario)
+actualizar_stock(inventario, "Camisa", 10)
+print(inventario)
+valor_total = calcular_valor_inventario(inventario)
+print("Valor total del inventario:", valor_total) # Deberia imprimir 1300.00
