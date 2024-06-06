@@ -468,40 +468,36 @@ def visitar_sitio(historiales : dict[str,Pila[str]], usuario : str, sitio : str)
 def navegar_atras(historiales : dict[str,Pila[str]], usuario : str) -> None:
     historiales[usuario].get()
 
-visitar_sitio(historiales,"Usuario1","youtube.com")
-visitar_sitio(historiales,"Usuario1","google.com")
-visitar_sitio(historiales,"Usuario1","instagram.com")
-print(list(historiales["Usuario1"].queue))
-navegar_atras(historiales,"Usuario1")
-print(list(historiales["Usuario1"].queue))
+# visitar_sitio(historiales,"Usuario1","youtube.com")
+# visitar_sitio(historiales,"Usuario1","google.com")
+# visitar_sitio(historiales,"Usuario1","instagram.com")
+# print(list(historiales["Usuario1"].queue))
+# navegar_atras(historiales,"Usuario1")
+# print(list(historiales["Usuario1"].queue))
 
 
 
 def agregar_producto(inventario : dict[str,dict[float,int]], nombre : str, precio : float, cantidad : int) -> None:
-    precioycantidad : dict[float,int] = {precio : cantidad}
+    precioycantidad : dict[float,int] = {"precio" : precio, "cantidad" : cantidad}
     inventario[nombre] = precioycantidad
     return None
 
 def actualizar_stock(inventario : dict[str,dict[float,int]], nombre : str, cantidad : int) -> None:
-    for i in inventario[nombre].keys():
-        inventario[nombre][i] = cantidad
+    inventario[nombre]["cantidad"] = cantidad
 
 def actualizar_precio(inventario : dict[str,dict[float,int]], nombre : str, precio : float) -> None:
-    for i in inventario[nombre].keys():
-        cantidad = inventario[nombre][i] 
-        inventario[nombre][i].pop()
-    inventario[nombre][precio] = cantidad
+    inventario[nombre]["precio"] = precio
 
 def calcular_valor_inventario(inventario) -> float:
     productos : list[str]= list(inventario.keys())
     sumatotal : int = 0
     for i in productos:
-        precio : list[float] = list(inventario[i].keys())
-        cantidad : list[int] = inventario[i][precio[0]]
-        sumatotal += precio[0]*cantidad
+        precio : float = inventario[i]["precio"]
+        cantidad : float = inventario[i]["cantidad"]
+        sumatotal += precio*cantidad
     return sumatotal
 
-inventario : dict[str,dict[float,int]] = {}
+inventario : dict[str,dict[str,float]] = {}
 agregar_producto(inventario, "Camisa", 20.0, 50) 
 agregar_producto(inventario, "Pantalon", 30.0, 30) 
 print(inventario)
