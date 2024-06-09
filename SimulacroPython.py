@@ -44,4 +44,4 @@ def convertir_a_diccionario(s : list[int]) -> dict[int,int]:
             apariciones[i] = 1
     return apariciones
 
-print(convertir_a_diccionario([1,2,1,1,2,1]))
+#print(convertir_a_diccionario([1,2,1,1,2,1]))
